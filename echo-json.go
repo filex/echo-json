@@ -7,10 +7,12 @@ import (
 	"os"
 )
 
+type fieldList map[string]interface{}
+
 func main() {
 	flag.Parse()
 
-	data := ReadData(flag.Args())
+	data := readData(flag.Args())
 
 	b, err := json.Marshal(data)
 	if err != nil {
@@ -20,12 +22,23 @@ func main() {
 	fmt.Printf("%s\n", b)
 }
 
-func ReadData(args []string) map[string]interface{} {
-	data := make(map[string]interface{})
+func readData(args []string) fieldList {
+	num := len(args)
+	count := num / 2
+	count += num % 2
+	data := make(map[string]interface{}, 2)
 
-	for i := 0; i < len(args); i++ {
-		data[flag.Arg(i)] = flag.Arg(i + 1)
+	for i := 0; i <= count; i++ {
+		var k string
+		k = args[i]
 		i++
+		var v interface{}
+		if i < num {
+			v = args[i]
+		} else {
+			v = ""
+		}
+		data[k] = v
 	}
 	return data
 }
