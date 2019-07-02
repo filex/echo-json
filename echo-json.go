@@ -2,43 +2,47 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
 )
 
-type fieldList map[string]interface{}
+type pairList map[string]interface{}
 
 func main() {
-	flag.Parse()
-
-	data := readData(flag.Args())
-
-	b, err := json.Marshal(data)
+	pairs, err := readPairs(os.Args[1:])
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "json encode error: %v", err)
-		os.Exit(1)
+		printError("argument error: %v", err)
+	}
+
+	b, err := json.Marshal(pairs)
+	if err != nil {
+		printError("json encode error: %v\n", err)
 	}
 	fmt.Printf("%s\n", b)
 }
 
-func readData(args []string) fieldList {
+func readPairs(args []string) (*pairList, error) {
 	num := len(args)
-	count := num / 2
-	count += num % 2
-	data := make(map[string]interface{}, 2)
+	pairs := make(pairList, num/2+num%2)
 
-	for i := 0; i <= count; i++ {
-		var k string
+	for i := 0; i < num; i++ {
+		var k, v string
 		k = args[i]
+		if k == "" {
+			return nil, fmt.Errorf("key (arg %v) may not be empty\n", i)
+		}
 		i++
-		var v interface{}
 		if i < num {
 			v = args[i]
 		} else {
 			v = ""
 		}
-		data[k] = v
+		pairs[k] = v
 	}
-	return data
+	return &pairs, nil
+}
+
+func printError(msg string, args ...interface{}) {
+	fmt.Fprintf(os.Stderr, msg, args...)
+	os.Exit(1)
 }
