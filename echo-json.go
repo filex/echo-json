@@ -20,16 +20,20 @@ const (
 )
 
 func main() {
-	pairs, err := readPairs(os.Args[1:])
-	if err != nil {
-		printError("argument error: %v", err)
-	}
-
-	b, err := json.Marshal(pairs)
+	b, err := args2JSON(os.Args[1:])
 	if err != nil {
 		printError("json encode error: %v\n", err)
 	}
 	fmt.Printf("%s\n", b)
+}
+
+func args2JSON(args []string) ([]byte, error) {
+	pairs, err := readPairs(args)
+	if err != nil {
+		return []byte(""), fmt.Errorf("Argument Error: %v", err)
+	}
+
+	return json.Marshal(pairs)
 }
 
 func readPairs(args []string) (*pairList, error) {

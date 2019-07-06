@@ -64,3 +64,27 @@ func TestReadData(t *testing.T) {
 
 	}
 }
+
+func TestJSONResult(t *testing.T) {
+	tests := []struct {
+		input []string
+		want  string // json result
+	}{
+		{
+			[]string{"a", "b"},
+			`{"a":"b"}`,
+		},
+	}
+	for _, test := range tests {
+		got, err := args2JSON(test.input)
+		if err != nil {
+			t.Errorf("args2JSON(%v) should not fail, got error: %v", test.input, err)
+		}
+		if test.want != string(got) {
+			t.Errorf("args2JSON(%v) == %v, got: %s", test.input, test.want, got)
+
+		}
+
+	}
+
+}
