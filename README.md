@@ -30,3 +30,15 @@ Supported type hints:
 * `float`
 * `bool` (accepts `true`, `false`, `1` and `0`)
 * `string` (default)
+* `raw` (accepts a literal JSON string)
+
+### Nested Objects
+
+There is no `object` type for arguments. However, as `echo-json` is intended to be a command line tool, we can use a sub shell with a `raw` type to create a JSON with nested objects:
+
+```
+$ echo-json type request raw:timing "$( echo-json float:ttfb 0.023 float:total 1.04)"
+{"timing":{"total":1.04,"ttfb":0.023},"type":"request"}
+``` 
+
+
