@@ -17,6 +17,7 @@ const (
 	type_int
 	type_float
 	type_bool
+	type_raw
 )
 
 func main() {
@@ -72,6 +73,8 @@ func readPairs(args []string) (*pairList, error) {
 			if tv, err = strconv.ParseBool(v); err != nil {
 				return nil, fmt.Errorf("value (%v) for key \"%v\" is not a bool: %v", v, k, err)
 			}
+		case type_raw:
+			tv = json.RawMessage([]byte(v))
 		}
 		pairs[k] = tv
 	}
@@ -93,6 +96,8 @@ func getType(key string) (argType, string) {
 			return type_bool, k
 		case "string":
 			return type_string, k
+		case "raw":
+			return type_raw, k
 		default:
 			// foo:bar is string, key is "foo:bar"
 			return type_string, key // return _key_ here!

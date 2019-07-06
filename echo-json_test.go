@@ -74,6 +74,11 @@ func TestJSONResult(t *testing.T) {
 			[]string{"a", "b"},
 			`{"a":"b"}`,
 		},
+		// raw type
+		{
+			[]string{"raw:x", "[1, 2, 3]"},
+			`{"x":[1,2,3]}`,
+		},
 	}
 	for _, test := range tests {
 		got, err := args2JSON(test.input)
