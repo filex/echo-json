@@ -52,7 +52,7 @@ func readPairs(args []string) (*pairList, error) {
 			return nil, fmt.Errorf("key (arg %v) may not be empty\n", i)
 		}
 		var tv interface{}
-	 	var err error
+		var err error
 		switch t {
 		case type_string:
 			tv = v
@@ -91,13 +91,13 @@ func getType(key string) (argType, string) {
 			return type_string, k
 		default:
 			// foo:bar is string, key is "foo:bar"
-			return type_string, key  // return _key_ here!
+			return type_string, key // return _key_ here!
 		}
 	}
 	return type_string, key
 }
 
 func printError(msg string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, msg, args...)
+	_, _ = fmt.Fprintf(os.Stderr, msg, args...)
 	os.Exit(1)
 }
