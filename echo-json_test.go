@@ -29,6 +29,28 @@ func TestReadData(t *testing.T) {
 			[]string{"", "bar"},
 			nil,
 		},
+		// types
+		{
+			[]string{"string:name", "alice", "int:age", "33", "float:score", "93.1", "bool:active", "1", "bool:admin", "false"},
+			&pairList{"name": "alice", "age": int64(33), "score": 93.1, "active": true, "admin": false},
+		},
+		// type errors
+		{
+			[]string{"string:"},
+			nil,
+		},
+		{
+			[]string{"int:a", "123.4"},
+			nil,
+		},
+		{
+			[]string{"float:a", "asdf"},
+			nil,
+		},
+		{
+			[]string{"bool:a", "asdf"},
+			nil,
+		},
 	}
 
 	for _, test := range tests {
