@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestReadData(t *testing.T) {
@@ -35,8 +36,8 @@ func TestReadData(t *testing.T) {
 		if test.want == nil && (got != nil || err == nil) {
 			t.Errorf("readPairs(%v) should be nil (w/ error), got: %v", test.input, got)
 		}
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("readPairs(%v) == %v, want: %v", test.input, got, test.want)
+		if !cmp.Equal(got, test.want) {
+			t.Errorf("readPairs(%v)\n%s", test.input, cmp.Diff(test.want, got))
 		}
 
 	}
