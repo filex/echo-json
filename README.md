@@ -32,6 +32,22 @@ Supported type hints:
 * `string` (default)
 * `raw` (accepts a literal JSON string)
 
+You can still use "namespaced" keys with colons. The last such part is
+considered the type:
+
+```
+$ echo-json u:age:int 33
+{"u:age":33}
+```
+
+If the type hint does not match one of the types listed above, it is left
+as part of the key name:
+
+```
+$ echo-json u:name alice u:role admin d:timestamp 1562520403
+{"d:timestamp":"1562520403","u:name":"alice","u:role":"admin"}
+```
+
 ### Nested Objects
 
 There is no `object` type for arguments. However, as `echo-json` is intended to be a command line tool, we can use a sub shell with a `raw` type to create a JSON with nested objects:
