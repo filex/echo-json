@@ -1,9 +1,10 @@
-.PHONY: build test install binaries help image push
+.PHONY: build test install binaries help image push clean
 
 help:
 	@echo make build test install
 	@echo make binaries
 	@echo make image push
+	@echo make clean
 
 build:
 	go build
@@ -34,3 +35,7 @@ image:
 
 push: image
 	docker push filex/echo-json:latest
+
+clean:
+	rm -rf dist/
+	docker rmi -f $$(docker images -f 'reference=filex/echo-json' --format '{{.ID}}')
