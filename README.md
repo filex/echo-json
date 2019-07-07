@@ -17,10 +17,10 @@ Typed Values
 -------------------
 
 Besides strings, `echo-json` can create typed values such as floats,
-integers or booleans. Use a _type hint_ in the key arg to define a type:
+integers or booleans. Append a _type hint_ to the key arg to set the value's type:
 
 ```
-$ echo-json int:age 33 float:score 1.234 bool:active true
+$ echo-json age:int 33 score:float 1.234 active:bool true
 {"active":true,"age":33,"score":1.234}
 ```
 
@@ -37,8 +37,6 @@ Supported type hints:
 There is no `object` type for arguments. However, as `echo-json` is intended to be a command line tool, we can use a sub shell with a `raw` type to create a JSON with nested objects:
 
 ```
-$ echo-json type request raw:timing "$( echo-json float:ttfb 0.023 float:total 1.04)"
+$ echo-json type request timing:raw "$( echo-json ttfb:float 0.023 total:float 1.04)"
 {"timing":{"total":1.04,"ttfb":0.023},"type":"request"}
-``` 
-
-
+```

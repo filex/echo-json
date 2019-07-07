@@ -31,7 +31,7 @@ func TestReadData(t *testing.T) {
 		},
 		// types
 		{
-			[]string{"string:name", "alice", "int:age", "33", "float:score", "93.1", "bool:active", "1", "bool:admin", "false"},
+			[]string{"name:string", "alice", "age:int", "33", "score:float", "93.1", "active:bool", "1", "admin:bool", "false"},
 			&pairList{"name": "alice", "age": int64(33), "score": 93.1, "active": true, "admin": false},
 		},
 		// unknown type -> keep
@@ -40,15 +40,15 @@ func TestReadData(t *testing.T) {
 			&pairList{"bing:boo": "bar"},
 		},
 		{
-			[]string{"int:a", "123.4"},
+			[]string{"a:int", "123.4"},
 			nil,
 		},
 		{
-			[]string{"float:a", "asdf"},
+			[]string{"a:float", "asdf"},
 			nil,
 		},
 		{
-			[]string{"bool:a", "asdf"},
+			[]string{"a:bool", "asdf"},
 			nil,
 		},
 	}
@@ -77,7 +77,7 @@ func TestJSONResult(t *testing.T) {
 		},
 		// raw type
 		{
-			in:   []string{"raw:x", "[1, 2, 3]"},
+			in:   []string{"x:raw", "[1, 2, 3]"},
 			want: `{"x":[1,2,3]}`,
 		},
 		// error

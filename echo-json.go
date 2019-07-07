@@ -82,13 +82,13 @@ func readPairs(args []string) (*pairList, error) {
 }
 
 func getType(key string) (argType, string) {
-	if strings.IndexByte(key, ':') > -1 {
-		parts := strings.SplitN(key, ":", 2)
-		t := parts[0]
-		k := parts[1]
+	if pos := strings.LastIndexByte(key, ':'); pos > -1 {
+		// key:type or namespaced:key:type
+		t := key[pos+1:]
+		k := key[:pos]
 		switch t {
 		case "int":
-			// int:age, type int, key "age"
+			// age:int, type int, key "age"
 			return type_int, k
 		case "float":
 			return type_float, k
