@@ -34,10 +34,16 @@ func TestReadData(t *testing.T) {
 			[]string{"name:string", "alice", "age:int", "33", "score:float", "93.1", "active:bool", "1", "admin:bool", "false"},
 			&pairList{"name": "alice", "age": int64(33), "score": 93.1, "active": true, "admin": false},
 		},
+		// types vs namespaced keys
+		{
+			[]string{"namespace:key:bool", "true"},
+			&pairList{"namespace:key": true},
+		},
+
 		// unknown type -> keep
 		{
-			[]string{"bing:boo", "bar"},
-			&pairList{"bing:boo": "bar"},
+			[]string{"bing:boo", "bar", "bing:go:bo", "ba"},
+			&pairList{"bing:boo": "bar", "bing:go:bo": "ba"},
 		},
 		{
 			[]string{"a:int", "123.4"},
