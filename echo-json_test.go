@@ -34,10 +34,10 @@ func TestReadData(t *testing.T) {
 			[]string{"string:name", "alice", "int:age", "33", "float:score", "93.1", "bool:active", "1", "bool:admin", "false"},
 			&pairList{"name": "alice", "age": int64(33), "score": 93.1, "active": true, "admin": false},
 		},
-		// type errors
+		// unknown type -> keep
 		{
-			[]string{"string:"},
-			nil,
+			[]string{"bing:boo", "bar"},
+			&pairList{"bing:boo": "bar"},
 		},
 		{
 			[]string{"int:a", "123.4"},
@@ -67,27 +67,41 @@ func TestReadData(t *testing.T) {
 
 func TestJSONResult(t *testing.T) {
 	tests := []struct {
-		input []string
-		want  string // json result
+		in      []string
+		want    string // json result
+		wantErr bool
 	}{
 		{
-			[]string{"a", "b"},
-			`{"a":"b"}`,
+			in:   []string{"a", "b"},
+			want: `{"a":"b"}`,
 		},
 		// raw type
 		{
-			[]string{"raw:x", "[1, 2, 3]"},
-			`{"x":[1,2,3]}`,
+			in:   []string{"raw:x", "[1, 2, 3]"},
+			want: `{"x":[1,2,3]}`,
+		},
+		// error
+		{
+			in:      []string{""},
+			want:    "Argument Error: key (arg 1) may not be empty\n",
+			wantErr: true,
 		},
 	}
 	for _, test := range tests {
-		got, err := args2JSON(test.input)
-		if err != nil {
-			t.Errorf("args2JSON(%v) should not fail, got error: %v", test.input, err)
-		}
-		if test.want != string(got) {
-			t.Errorf("args2JSON(%v) == %v, got: %s", test.input, test.want, got)
+		got, err := args2JSON(test.in)
+		if test.wantErr {
+			if err == nil {
+				t.Fatalf("args2JSON(%v) should fail, got: %v", test.in, got)
+			}
+			if test.want != err.Error() {
+				t.Errorf("args2JSON(%v) should fail with %v", test.in, cmp.Diff(test.want, err.Error()))
+			}
+		} else {
 
+			if test.want != string(got) {
+				t.Errorf("args2JSON(%v) == %v, got: %s", test.in, test.want, got)
+
+			}
 		}
 
 	}
