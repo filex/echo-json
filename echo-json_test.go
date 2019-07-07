@@ -57,6 +57,27 @@ func TestReadData(t *testing.T) {
 			[]string{"a:bool", "asdf"},
 			nil,
 		},
+		// edge cases: type hint for last arg with missing value
+		{
+			[]string{"foo:int"},
+			&pairList{"foo": 0},
+		},
+		{
+			[]string{"foo:float"},
+			&pairList{"foo": 0.0},
+		},
+		{
+			[]string{"foo:bool"},
+			&pairList{"foo": false},
+		},
+		{
+			[]string{"foo:string"},
+			&pairList{"foo": ""},
+		},
+		{
+			[]string{"foo:raw"},
+			&pairList{"foo": nil},
+		},
 	}
 
 	for _, test := range tests {
@@ -86,6 +107,10 @@ func TestJSONResult(t *testing.T) {
 			in:   []string{"x:raw", "[1, 2, 3]"},
 			want: `{"x":[1,2,3]}`,
 		},
+		{
+			in:   []string{"x:raw"},
+			want: `{"x":null}`,
+		},
 		// error
 		{
 			in:      []string{""},
@@ -103,10 +128,8 @@ func TestJSONResult(t *testing.T) {
 				t.Errorf("args2JSON(%v) should fail with %v", test.in, cmp.Diff(test.want, err.Error()))
 			}
 		} else {
-
 			if test.want != string(got) {
-				t.Errorf("args2JSON(%v) == %v, got: %s", test.in, test.want, got)
-
+				t.Errorf("args2JSON(%v) == %v\n%v", test.in, test.want, cmp.Diff(test.want, string(got)))
 			}
 		}
 
