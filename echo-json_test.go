@@ -124,14 +124,50 @@ func TestJSONResult(t *testing.T) {
 			in:   []string{"x:raw", "[1, 2, 3]"},
 			want: `{"x":[1,2,3]}`,
 		},
+		// raw default
 		{
 			in:   []string{"x:raw"},
 			want: `{"x":null}`,
+		},
+		// raw null
+		{
+			in:   []string{"x:raw", "null"},
+			want: `{"x":null}`,
+		},
+		// raw number
+		{
+			in:   []string{"x:raw", "123.3"},
+			want: `{"x":123.3}`,
+		},
+		// raw: most complicated string
+		{
+			in:   []string{"x:raw", "\"foo\""},
+			want: `{"x":"foo"}`,
 		},
 		// error
 		{
 			in:      []string{""},
 			want:    "Argument Error: key (arg 1) may not be empty\n",
+			wantErr: true,
+		},
+		{
+			in:      []string{"a:int", "NaN"},
+			want:    `Argument Error: value (NaN) for key "a" is not an int: strconv.ParseInt: parsing "NaN": invalid syntax`,
+			wantErr: true,
+		},
+		{
+			in:      []string{"a:bool", "NaB"},
+			want:    `Argument Error: value (NaB) for key "a" is not a bool: strconv.ParseBool: parsing "NaB": invalid syntax`,
+			wantErr: true,
+		},
+		{
+			in:      []string{"a:float", "NaF"},
+			want:    `Argument Error: value (NaF) for key "a" is not a float: strconv.ParseFloat: parsing "NaF": invalid syntax`,
+			wantErr: true,
+		},
+		{
+			in: []string{"a:raw", "no valid json here"},
+			want:    `json: error calling MarshalJSON for type json.RawMessage: invalid character 'o' in literal null (expecting 'u')`,
 			wantErr: true,
 		},
 	}
