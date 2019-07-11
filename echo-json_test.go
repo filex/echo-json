@@ -167,6 +167,7 @@ func TestJSONResult(t *testing.T) {
 		},
 		{
 			in: []string{"a:raw", "no valid json here"},
+			// message is not printed, main() wraps MarshalerError
 			want:    `json: error calling MarshalJSON for type json.RawMessage: invalid character 'o' in literal null (expecting 'u')`,
 			wantErr: true,
 		},

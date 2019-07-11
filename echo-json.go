@@ -23,8 +23,12 @@ const (
 func main() {
 	b, err := args2JSON(os.Args[1:])
 	if err != nil {
-		printError("json encode error: %v\n", err)
+		if _, ok := err.(*json.MarshalerError); ok {
+			printError("Argument Error: A raw value is not valid JSON\n")
+		}
+		printError("JSON encode error: %T %v\n", err, err)
 	}
+
 	fmt.Printf("%s\n", b)
 }
 
