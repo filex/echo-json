@@ -42,16 +42,22 @@ func readPairs(args []string) (*pairList, error) {
 	pairs := make(pairList, num/2+num%2)
 
 	var i int
+	var k, v string
+
 	isLast := func() bool {
 		return i >= num
 	}
+	useDefault := func() bool {
+		return isLast() || v == ""
+	}
 
 	for ; i < num; i++ {
-		var k, v string
 		k = args[i]
 		i++
 		if !isLast() {
 			v = args[i]
+		} else {
+			v = ""
 		}
 
 		// k can get a new name here
@@ -65,25 +71,25 @@ func readPairs(args []string) (*pairList, error) {
 		case type_string:
 			tv = v
 		case type_int:
-			if isLast() {
+			if useDefault() {
 				tv = 0
 			} else if tv, err = strconv.ParseInt(v, 10, 64); err != nil {
 				return nil, fmt.Errorf("value (%v) for key \"%v\" is not an int: %v", v, k, err)
 			}
 		case type_float:
-			if isLast() {
+			if useDefault() {
 				tv = 0.0
 			} else if tv, err = strconv.ParseFloat(v, 64); err != nil {
 				return nil, fmt.Errorf("value (%v) for key \"%v\" is not a float: %v", v, k, err)
 			}
 		case type_bool:
-			if isLast() {
+			if useDefault() {
 				tv = false
 			} else if tv, err = strconv.ParseBool(v); err != nil {
 				return nil, fmt.Errorf("value (%v) for key \"%v\" is not a bool: %v", v, k, err)
 			}
 		case type_raw:
-			if isLast() {
+			if useDefault() {
 				tv = nil
 			} else {
 				tv = json.RawMessage([]byte(v))

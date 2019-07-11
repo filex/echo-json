@@ -78,6 +78,23 @@ func TestReadData(t *testing.T) {
 			[]string{"foo:raw"},
 			&pairList{"foo": nil},
 		},
+		// #2 typed default values when empty string is given
+		{
+			[]string{"foo:float", "", "z"},
+			&pairList{"foo": 0.0, "z": ""},
+		},
+		{
+			[]string{"foo:int", "", "z"},
+			&pairList{"foo": 0, "z": ""},
+		},
+		{
+			[]string{"foo:bool", "", "z"},
+			&pairList{"foo": false, "z": ""},
+		},
+		{
+			[]string{"foo:raw", "", "z"},
+			&pairList{"foo": nil, "z": ""},
+		},
 	}
 
 	for _, test := range tests {
@@ -132,7 +149,5 @@ func TestJSONResult(t *testing.T) {
 				t.Errorf("args2JSON(%v) == %v\n%v", test.in, test.want, cmp.Diff(test.want, string(got)))
 			}
 		}
-
 	}
-
 }
