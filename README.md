@@ -56,3 +56,31 @@ There is no `object` type for arguments. However, as `echo-json` is intended to 
 $ echo-json type request timing:raw "$( echo-json ttfb:float 0.023 total:float 1.04)"
 {"timing":{"total":1.04,"ttfb":0.023},"type":"request"}
 ```
+
+
+## Default Values
+
+A value is missing if
+
+* it is the empty string `""` or
+* an uneven number of arguments was given.
+
+If a field's value is missing, the default value for the corresponding type is used.
+
+This avoids failure if the command line has to rely on optional data, such as variables or sub shells:
+
+```shell
+$ echo-json id:int "$VAR"
+{"id":0}
+```
+
+If `$VAR` is not set value argument will expand to `""`. While this is not an `int`, the default value of `0` is used instead of bailing out with an error.
+
+Note that the variable must be quoted: `"$VAR"`. Without quotes, `echo-json` would not see the variable at all if it is not set. (Then a following _key_ would be used as _value_.)
+
+Default Values:
+
+* `int` →`0`
+* `float` → `0.0`
+* `bool` → `false`
+* `raw` → `null`
