@@ -152,17 +152,17 @@ func TestJSONResult(t *testing.T) {
 		},
 		{
 			in:      []string{"a:int", "NaN"},
-			want:    `Argument Error: value (NaN) for key "a" is not an int: strconv.ParseInt: parsing "NaN": invalid syntax`,
+			want:    `Argument Error: value "NaN" for key "a" is not an int: strconv.ParseInt: parsing "NaN": invalid syntax`,
 			wantErr: true,
 		},
 		{
 			in:      []string{"a:bool", "NaB"},
-			want:    `Argument Error: value (NaB) for key "a" is not a bool: strconv.ParseBool: parsing "NaB": invalid syntax`,
+			want:    `Argument Error: value "NaB" for key "a" is not a bool: strconv.ParseBool: parsing "NaB": invalid syntax`,
 			wantErr: true,
 		},
 		{
 			in:      []string{"a:float", "NaF"},
-			want:    `Argument Error: value (NaF) for key "a" is not a float: strconv.ParseFloat: parsing "NaF": invalid syntax`,
+			want:    `Argument Error: value "NaF" for key "a" is not a float: strconv.ParseFloat: parsing "NaF": invalid syntax`,
 			wantErr: true,
 		},
 		{

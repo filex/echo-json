@@ -45,10 +45,12 @@ func main() {
 
 	b, err := args2JSON(flag.Args())
 	if err != nil {
-		if _, ok := err.(*json.MarshalerError); ok {
-			printError("Argument Error: A raw value is not valid JSON\n")
+		switch err.(type) {
+		case *json.MarshalerError:
+			printError("Argument Error: A raw value (*:raw) contains invalid JSON\n")
+		default:
+			printError("%v\n", err)
 		}
-		printError("JSON encode error: %T %v\n", err, err)
 	}
 
 	fmt.Printf("%s\n", b)
@@ -134,19 +136,19 @@ func readPairs(args []string) (*pairList, error) {
 			if useDefault() {
 				tv = 0
 			} else if tv, err = strconv.ParseInt(v, 10, 64); err != nil {
-				return nil, fmt.Errorf("value (%v) for key \"%v\" is not an int: %v", v, k, err)
+				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not an int: %v", v, k, err)
 			}
 		case type_float:
 			if useDefault() {
 				tv = 0.0
 			} else if tv, err = strconv.ParseFloat(v, 64); err != nil {
-				return nil, fmt.Errorf("value (%v) for key \"%v\" is not a float: %v", v, k, err)
+				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not a float: %v", v, k, err)
 			}
 		case type_bool:
 			if useDefault() {
 				tv = false
 			} else if tv, err = strconv.ParseBool(v); err != nil {
-				return nil, fmt.Errorf("value (%v) for key \"%v\" is not a bool: %v", v, k, err)
+				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not a bool: %v", v, k, err)
 			}
 		case type_raw:
 			if useDefault() {
