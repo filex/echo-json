@@ -1,31 +1,37 @@
 .PHONY: build test install binaries help image push clean
 
+all: build test
+
 help:
 	@echo make build test install
 	@echo make binaries
 	@echo make image push
 	@echo make clean
 
+TRAVIS_TAG?=$(shell git rev-parse --short HEAD)
+
+TAG:=$(TRAVIS_TAG)
+gobuild_args := -ldflags "-s -w -X main.Version=$(TAG)"
+
 build:
-	go build
+	go build $(gobuild_args)
 
 test:
 	go test
 
-install:
+install: build
 	go install
 
 dist:
 	mkdir $@
 
 DEPS:=*.go go.sum Makefile
-GOBUILDFLAGS:=-ldflags "-s -w"
 
 dist/echo-json.exe: $(DEPS)
-	GOOS=windows GOARCH=amd64 go build $(GOBUILDFLAGS) -o $@
+	GOOS=windows GOARCH=amd64 go build $(gobuild_args) -o $@
 
 dist/echo-json.%: $(DEPS)
-	GOOS=$* GOARCH=amd64 go build $(GOBUILDFLAGS) -o $@
+	GOOS=$* GOARCH=amd64 go build $(gobuild_args) -o $@
 
 binaries: dist $(addprefix dist/echo-json.,linux darwin exe)
 	@ls -l dist

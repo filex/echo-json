@@ -188,3 +188,22 @@ func TestJSONResult(t *testing.T) {
 		}
 	}
 }
+
+func TestVersion(t *testing.T) {
+	tests := []struct {
+		version string
+		want    string
+	}{
+		{"", "development"},
+		{"v1.0", "1.0"},
+		{"foo", "foo"},
+	}
+
+	for _, test := range tests {
+		Version = test.version
+		got := version()
+		if got != test.want {
+			t.Errorf("version(%s) == %s, got: %s", test.version, test.want, got)
+		}
+	}
+}

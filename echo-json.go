@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 	"strconv"
@@ -20,8 +21,22 @@ const (
 	type_raw
 )
 
+var (
+	showVersion = flag.Bool("v", false, "show version information")
+)
+
+// set on build time with -ldflags "-X …"
+var Version string
+
 func main() {
-	b, err := args2JSON(os.Args[1:])
+	flag.Parse()
+
+	if *showVersion {
+		printVersion()
+		os.Exit(0)
+	}
+
+	b, err := args2JSON(flag.Args())
 	if err != nil {
 		if _, ok := err.(*json.MarshalerError); ok {
 			printError("Argument Error: A raw value is not valid JSON\n")
@@ -30,6 +45,20 @@ func main() {
 	}
 
 	fmt.Printf("%s\n", b)
+}
+
+func printVersion() {
+	fmt.Printf("echo-json\nVersion: %s\nMore info at https://github.com/filex/echo-json\n", version())
+}
+
+func version() string {
+	if Version == "" {
+		Version = "development"
+	}
+	if Version[:1] == "v" {
+		return Version[1:]
+	}
+	return Version
 }
 
 func args2JSON(args []string) ([]byte, error) {
