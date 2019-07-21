@@ -23,13 +23,20 @@ const (
 
 var (
 	showVersion = flag.Bool("v", false, "show version information")
+	showHelp    = flag.Bool("h", false, "show usage information")
 )
 
 // set on build time with -ldflags "-X …"
 var Version string
 
 func main() {
+	flag.Usage = printHelp
 	flag.Parse()
+
+	if *showHelp {
+		printHelp()
+		os.Exit(0)
+	}
 
 	if *showVersion {
 		printVersion()
@@ -49,6 +56,26 @@ func main() {
 
 func printVersion() {
 	fmt.Printf("echo-json\nVersion: %s\nMore info at https://github.com/filex/echo-json\n", version())
+}
+
+func printHelp() {
+	const usageTemplate = `
+echo-json forms name/value pairs from its arguments and outputs a JSON object
+
+Examples:
+
+$ echo-json foo bar x y
+{"foo":"bar","x":"y"}
+
+$ echo-json b:bool true num:int 123
+{"b": true, "num": 123}
+
+Flags:
+`
+	fmt.Println()
+	printVersion()
+	fmt.Println(usageTemplate)
+	flag.PrintDefaults()
 }
 
 func version() string {
