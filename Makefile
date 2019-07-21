@@ -47,5 +47,5 @@ push: image
 	docker push filex/echo-json:latest
 
 clean:
-	rm -rf dist/
-	docker rmi -f $$(docker images -f 'reference=filex/echo-json' --format '{{.ID}}')
+	rm -rf dist/ echo-json
+	- docker rmi -f $$(docker images -f 'reference=filex/echo-json' --format '{{.ID}}')
