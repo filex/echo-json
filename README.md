@@ -4,6 +4,7 @@ echo-json
 `echo-json` is a tiny go cli utility that accepts name/value pairs as command
 line arguments and prints them as a JSON object.
 
+[![Build Status](https://travis-ci.com/filex/echo-json.svg?branch=master)](https://travis-ci.com/filex/echo-json)
 
 ```
 $ echo-json foo bar baz '"quux"'
