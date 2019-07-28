@@ -13,14 +13,18 @@ TRAVIS_TAG?=$(shell git rev-parse --short HEAD)
 TAG:=$(TRAVIS_TAG)
 gobuild_args := -ldflags "-s -w -X main.Version=$(TAG)"
 
-build:
+build: echo-json
+
+echo-json:
 	go build $(gobuild_args)
 
 test:
 	go test
 
-install: build
-	go install
+$$GOPATH/bin/echo-json: echo-json
+	cp $< $@
+
+install: $$GOPATH/bin/echo-json
 
 dist:
 	mkdir $@
