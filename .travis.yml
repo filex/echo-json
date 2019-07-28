@@ -1,9 +1,19 @@
 language: go
-
 go:
-  - 1.12.x
-
+- 1.12.x
 env:
-  - GO111MODULE=on
-
+- GO111MODULE=on
 script: make test binaries
+deploy:
+  provider: releases
+  api_key:
+    secure: JXHD9CM0LbngBMs/JQd3qzOEs/lX6gt77eI/YMNNKFwpvvKl3G+Tgn6DZkzfEMsQOsZKk8J9mnaIQGQP+qpYtQgRLITASFDGUawO00tAGkl0DDhTobsSVCd/iG0RSRlGlOxpY0gJHDuDIaPDaiQyE3k30dP/a+o518MNZAf69R3uZ+h7JZCLDuB9WY0gs7w+M+QSyd9vwG4FmhPt24y8S9d2AotzUYTWGwQQo2a5zy2LbM489xyY8OAHGC7YBwLWjCEFhGwpvuOq0MHMTgTsflO30Q3E61qyfmSInaP/AB9aZnckABQMRdSAt8GmyZUtM8SgEEne5CyyG/C5CbQuKlajq7fxtauFn+/OH6Q24pApwKcRfxz44MkgMlelKPCPWFGWezp8gVGSrCno/l8+hxsL3j5Sdq+TS5nLKUJ2rA3tIgPKf5ek3YBTFkaJRMGrWz/wBuztGqyisvSdP0/WhScwmhPHs/afnG3ic/lKVSVRh9XUvFCeCqfLU7GYGWPq0WbLOxsu+NWdlAosAz2/bdQkjV2wxkE2PjvffSKGyTKkMomQPIsMjQGVSNps4NvP1uAjovXCexhZZkgL9BXBmA4gTKLOUenrEekkbupSHoJ6CV6E3JPTcef1Bs6/dpH8Vr8txr7tbMweBvUbAGtbM3ok8QZa0rJvrDDpgI8az3s=
+  file:
+    - dist/echo-json.darwin
+    - dist/echo-json.exe
+    - dist/echo-json.linux
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
+    repo: filex/echo-json
