@@ -1,14 +1,14 @@
 .PHONY: build test install binaries help image push clean
 
-all: build test
+all: test build
 
 help:
-	@echo make build test install
+	@echo make test build install
 	@echo make binaries
 	@echo make image push
 	@echo make clean
 
-TRAVIS_TAG?=$(shell git rev-parse --short HEAD)
+TRAVIS_TAG?=$(shell git describe --tags HEAD)
 
 TAG:=$(TRAVIS_TAG)
 gobuild_args := -ldflags "-s -w -X main.Version=$(TAG)"
