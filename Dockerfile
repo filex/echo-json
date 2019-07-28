@@ -1,12 +1,17 @@
 FROM golang:1.12 as build
 
+ARG TAG=master
 WORKDIR /tmp
 # use modules
 RUN go get -d -v github.com/filex/echo-json && mv /go/src/github.com/filex/echo-json .
-RUN cd echo-json && go build -ldflags "-s -w" -o /echo-json
+RUN cd echo-json && \
+	echo "checking out branch/tag ${TAG}" && \
+	git checkout ${TAG} && \
+	make build TAG=${TAG}
 
 FROM scratch
-COPY --from=build /echo-json /echo-json
+COPY --from=build /tmp/echo-json/echo-json /echo-json
+RUN ["/echo-json", "-v"]
 RUN ["/echo-json", "works", "great!"]
 ENTRYPOINT ["/echo-json"]
 

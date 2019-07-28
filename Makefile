@@ -37,7 +37,7 @@ binaries: dist $(addprefix dist/echo-json.,linux darwin exe)
 	@ls -l dist
 
 image:
-	docker build --pull -t filex/echo-json .
+	docker build --build-arg TAG="$(TAG)" --pull -t filex/echo-json .
 
 push: image
 	docker push filex/echo-json:latest
