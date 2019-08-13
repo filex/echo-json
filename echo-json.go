@@ -114,10 +114,10 @@ func readPairs(args []string) (*pairList, error) {
 	for ; i < num; i++ {
 		k = args[i]
 		i++
+
+		v = ""
 		if !isLast() {
 			v = args[i]
-		} else {
-			v = ""
 		}
 
 		// k can get a new name here
