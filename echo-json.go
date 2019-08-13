@@ -163,28 +163,30 @@ func readPairs(args []string) (*pairList, error) {
 }
 
 func getType(key string) (argType, string) {
-	if pos := strings.LastIndexByte(key, ':'); pos > -1 {
-		// key:type or namespaced:key:type
-		t := key[pos+1:]
-		k := key[:pos]
-		switch t {
-		case "int":
-			// age:int, type int, key "age"
-			return typeInt, k
-		case "float":
-			return typeFloat, k
-		case "bool":
-			return typeBool, k
-		case "string":
-			return typeString, k
-		case "raw":
-			return typeRaw, k
-		default:
-			// foo:bar is string, key is "foo:bar"
-			return typeString, key // return _key_ here!
-		}
+	if !strings.Contains(key, ":") {
+		return typeString, key
 	}
-	return typeString, key
+
+	pos := strings.LastIndexByte(key, ':')
+	// key:type or namespaced:key:type
+	t := key[pos+1:]
+	k := key[:pos]
+	switch t {
+	case "int":
+		// age:int, type int, key "age"
+		return typeInt, k
+	case "float":
+		return typeFloat, k
+	case "bool":
+		return typeBool, k
+	case "string":
+		return typeString, k
+	case "raw":
+		return typeRaw, k
+	default:
+		// foo:bar is string, key is "foo:bar"
+		return typeString, key // return _key_ here!
+	}
 }
 
 func printError(msg string, args ...interface{}) {
