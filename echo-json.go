@@ -11,14 +11,12 @@ import (
 
 type pairList map[string]interface{}
 
-type argType int
-
 const (
-	typeString argType = iota
-	typeInt
-	typeFloat
-	typeBool
-	typeRaw
+	typeString = "string"
+	typeInt    = "int"
+	typeFloat  = "float"
+	typeBool   = "bool"
+	typeRaw    = "raw"
 )
 
 var (
@@ -162,7 +160,8 @@ func readPairs(args []string) (*pairList, error) {
 	return &pairs, nil
 }
 
-func getType(key string) (argType, string) {
+// getType checks for explicit given types and validates the type string.
+func getType(key string) (string, string) {
 	if !strings.Contains(key, ":") {
 		return typeString, key
 	}
@@ -172,16 +171,16 @@ func getType(key string) (argType, string) {
 	t := key[pos+1:]
 	k := key[:pos]
 	switch t {
-	case "int":
+	case typeInt:
 		// age:int, type int, key "age"
 		return typeInt, k
-	case "float":
+	case typeFloat:
 		return typeFloat, k
-	case "bool":
+	case typeBool:
 		return typeBool, k
-	case "string":
+	case typeString:
 		return typeString, k
-	case "raw":
+	case typeRaw:
 		return typeRaw, k
 	default:
 		// foo:bar is string, key is "foo:bar"
