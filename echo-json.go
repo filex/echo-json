@@ -14,11 +14,11 @@ type pairList map[string]interface{}
 type argType int
 
 const (
-	type_string argType = iota
-	type_int
-	type_float
-	type_bool
-	type_raw
+	typeString argType = iota
+	typeInt
+	typeFloat
+	typeBool
+	typeRaw
 )
 
 var (
@@ -130,27 +130,27 @@ func readPairs(args []string) (*pairList, error) {
 		var tv interface{}
 		var err error
 		switch t {
-		case type_string:
+		case typeString:
 			tv = v
-		case type_int:
+		case typeInt:
 			if useDefault() {
 				tv = 0
 			} else if tv, err = strconv.ParseInt(v, 10, 64); err != nil {
 				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not an int: %v", v, k, err)
 			}
-		case type_float:
+		case typeFloat:
 			if useDefault() {
 				tv = 0.0
 			} else if tv, err = strconv.ParseFloat(v, 64); err != nil {
 				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not a float: %v", v, k, err)
 			}
-		case type_bool:
+		case typeBool:
 			if useDefault() {
 				tv = false
 			} else if tv, err = strconv.ParseBool(v); err != nil {
 				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not a bool: %v", v, k, err)
 			}
-		case type_raw:
+		case typeRaw:
 			if useDefault() {
 				tv = nil
 			} else {
@@ -170,21 +170,21 @@ func getType(key string) (argType, string) {
 		switch t {
 		case "int":
 			// age:int, type int, key "age"
-			return type_int, k
+			return typeInt, k
 		case "float":
-			return type_float, k
+			return typeFloat, k
 		case "bool":
-			return type_bool, k
+			return typeBool, k
 		case "string":
-			return type_string, k
+			return typeString, k
 		case "raw":
-			return type_raw, k
+			return typeRaw, k
 		default:
 			// foo:bar is string, key is "foo:bar"
-			return type_string, key // return _key_ here!
+			return typeString, key // return _key_ here!
 		}
 	}
-	return type_string, key
+	return typeString, key
 }
 
 func printError(msg string, args ...interface{}) {
