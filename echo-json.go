@@ -11,14 +11,12 @@ import (
 
 type pairList map[string]interface{}
 
-type argType int
-
 const (
-	type_string argType = iota
-	type_int
-	type_float
-	type_bool
-	type_raw
+	typeString = "string"
+	typeInt    = "int"
+	typeFloat  = "float"
+	typeBool   = "bool"
+	typeRaw    = "raw"
 )
 
 var (
@@ -116,10 +114,10 @@ func readPairs(args []string) (*pairList, error) {
 	for ; i < num; i++ {
 		k = args[i]
 		i++
+
+		v = ""
 		if !isLast() {
 			v = args[i]
-		} else {
-			v = ""
 		}
 
 		// k can get a new name here
@@ -130,27 +128,27 @@ func readPairs(args []string) (*pairList, error) {
 		var tv interface{}
 		var err error
 		switch t {
-		case type_string:
+		case typeString:
 			tv = v
-		case type_int:
+		case typeInt:
 			if useDefault() {
 				tv = 0
 			} else if tv, err = strconv.ParseInt(v, 10, 64); err != nil {
 				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not an int: %v", v, k, err)
 			}
-		case type_float:
+		case typeFloat:
 			if useDefault() {
 				tv = 0.0
 			} else if tv, err = strconv.ParseFloat(v, 64); err != nil {
 				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not a float: %v", v, k, err)
 			}
-		case type_bool:
+		case typeBool:
 			if useDefault() {
 				tv = false
 			} else if tv, err = strconv.ParseBool(v); err != nil {
 				return nil, fmt.Errorf("value \"%v\" for key \"%v\" is not a bool: %v", v, k, err)
 			}
-		case type_raw:
+		case typeRaw:
 			if useDefault() {
 				tv = nil
 			} else {
@@ -162,29 +160,32 @@ func readPairs(args []string) (*pairList, error) {
 	return &pairs, nil
 }
 
-func getType(key string) (argType, string) {
-	if pos := strings.LastIndexByte(key, ':'); pos > -1 {
-		// key:type or namespaced:key:type
-		t := key[pos+1:]
-		k := key[:pos]
-		switch t {
-		case "int":
-			// age:int, type int, key "age"
-			return type_int, k
-		case "float":
-			return type_float, k
-		case "bool":
-			return type_bool, k
-		case "string":
-			return type_string, k
-		case "raw":
-			return type_raw, k
-		default:
-			// foo:bar is string, key is "foo:bar"
-			return type_string, key // return _key_ here!
-		}
+// getType checks for explicit given types and validates the type string.
+func getType(key string) (string, string) {
+	if !strings.Contains(key, ":") {
+		return typeString, key
 	}
-	return type_string, key
+
+	pos := strings.LastIndexByte(key, ':')
+	// key:type or namespaced:key:type
+	t := key[pos+1:]
+	k := key[:pos]
+	switch t {
+	case typeInt:
+		// age:int, type int, key "age"
+		return typeInt, k
+	case typeFloat:
+		return typeFloat, k
+	case typeBool:
+		return typeBool, k
+	case typeString:
+		return typeString, k
+	case typeRaw:
+		return typeRaw, k
+	default:
+		// foo:bar is string, key is "foo:bar"
+		return typeString, key // return _key_ here!
+	}
 }
 
 func printError(msg string, args ...interface{}) {
