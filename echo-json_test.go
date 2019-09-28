@@ -171,6 +171,19 @@ func TestJSONResult(t *testing.T) {
 			want:    `json: error calling MarshalJSON for type json.RawMessage: invalid character 'o' in literal null (expecting 'u')`,
 			wantErr: true,
 		},
+		// test html encoding #5
+		{
+			in:   []string{"s>&@*();", "ü</@*}{;"},
+			want: `{"s>&@*();":"ü</@*}{;"}`,
+		},
+		{
+			in: []string{"asdf", "value&asdf>"},
+			want: `{"asdf":"value&asdf>"}`,
+		},
+		{
+			in: []string{"a", "b", "c:int", "2" },
+			want: `{"a":"b","c":2}`,
+		},
 	}
 	for _, test := range tests {
 		got, err := args2JSON(test.in)
