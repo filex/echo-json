@@ -24,7 +24,8 @@ var (
 	showHelp    = flag.Bool("h", false, "show usage information")
 )
 
-// set on build time with -ldflags "-X …"
+// Version to display with -v.
+// Set on build time with -ldflags "-X …"
 var Version string
 
 func main() {
@@ -123,7 +124,7 @@ func readPairs(args []string) (*pairList, error) {
 		// k can get a new name here
 		t, k := getType(k)
 		if k == "" {
-			return nil, fmt.Errorf("key (arg %v) may not be empty\n", i)
+			return nil, fmt.Errorf("key (arg %v) may not be empty", i)
 		}
 		var tv interface{}
 		var err error

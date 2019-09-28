@@ -147,7 +147,7 @@ func TestJSONResult(t *testing.T) {
 		// error
 		{
 			in:      []string{""},
-			want:    "Argument Error: key (arg 1) may not be empty\n",
+			want:    "Argument Error: key (arg 1) may not be empty",
 			wantErr: true,
 		},
 		{
