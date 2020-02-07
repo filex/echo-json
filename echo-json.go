@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -95,7 +96,15 @@ func args2JSON(args []string) ([]byte, error) {
 		return []byte(""), fmt.Errorf("Argument Error: %v", err)
 	}
 
-	return json.Marshal(pairs)
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "")
+	if err = enc.Encode(pairs); err != nil {
+		return []byte(""), err
+	}
+	// Strip the newline that is added by Encode()
+	return buf.Bytes()[:buf.Len()-1], nil
 }
 
 func readPairs(args []string) (*pairList, error) {
