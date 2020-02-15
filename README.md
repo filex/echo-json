@@ -5,6 +5,7 @@ echo-json
 line arguments and prints them as a JSON object.
 
 [![Build Status](https://travis-ci.com/filex/echo-json.svg?branch=master)](https://travis-ci.com/filex/echo-json)
+[![Docker Image](https://img.shields.io/docker/pulls/filex/echo-json)](https://hub.docker.com/r/filex/echo-json)
 
 ```
 $ echo-json foo bar baz '"quux"'
