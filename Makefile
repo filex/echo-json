@@ -15,7 +15,7 @@ gobuild_args := -ldflags "-s -w -X main.Version=$(TAG)"
 
 build: echo-json
 
-echo-json:
+echo-json: echo-json.go
 	go build $(gobuild_args)
 
 test:
