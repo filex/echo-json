@@ -1,8 +1,6 @@
 language: go
 go:
-- 1.13.x
-env:
-- GO111MODULE=on
+- 1.16.x
 script: make test binaries
 deploy:
   provider: releases
